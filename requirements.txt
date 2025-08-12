@@ -1,49 +1,6 @@
-# RAG Chatbot AI - Requirements File
-# Python dependencies for the RAG Chatbot application
-
-# Core Framework
-streamlit>=1.28.0
-
-# PDF Processing
-PyPDF2>=3.0.1
-
-# Vector Database
-chromadb>=0.4.15
-
-# Machine Learning & NLP
-sentence-transformers>=2.2.2
-torch>=2.0.0
-transformers>=4.30.0
-
-# OpenAI API (OpenRouter compatible)
-openai>=1.0.0
-
-# HTTP Requests & API handling
-requests>=2.31.0
-httpx>=0.24.0
-
-# Data Processing
-numpy>=1.24.0
-pandas>=2.0.0
-
-# Scientific Computing (dependencies)
-scipy>=1.10.0
-scikit-learn>=1.3.0
-
-# System & File handling
-tempfile  # Built-in Python module
-os        # Built-in Python module
-io        # Built-in Python module
-time      # Built-in Python module
-
-# Additional utilities
-python-dotenv>=1.0.0  # For environment variables (optional)
-pillow>=10.0.0        # Image processing (if needed)
-
-# Development & Testing (optional)
-pytest>=7.4.0
-black>=23.7.0
-flake8>=6.0.0
-
-# Note: Some packages like tempfile, os, io, and time are built-in Python modules
-# and don't need to be installed via pip
+streamlit==1.37.1
+PyPDF2==3.0.1
+chromadb==0.5.5
+sentence-transformers==2.2.2
+openai==1.40.0
+python-dotenv==1.0.1
