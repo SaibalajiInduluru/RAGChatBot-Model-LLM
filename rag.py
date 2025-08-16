@@ -1,6 +1,7 @@
 import streamlit as st
 import PyPDF2
-import chromadb
+import hnswlib
+import numpy as np
 from sentence_transformers import SentenceTransformer
 import openai
 import tempfile
@@ -649,16 +650,11 @@ st.markdown("""
 class RAGChatbot:
     def __init__(self, api_key=None):
         try:
-            # Initialize ChromaDB client
-            self.client = chromadb.Client()
-            
-            # Create collection with unique name to avoid conflicts
-            collection_name = f"documents_{int(time.time())}"
-            try:
-                # Try to get existing collection or create new one
-                self.collection = self.client.get_or_create_collection(collection_name)
-            except:
-                self.collection = self.client.create_collection(collection_name)
+            # Initialize Hnswlib index
+            self.dimension = 384  # all-MiniLM-L6-v2 embedding dimension
+            self.index = None
+            self.documents = []
+            self.document_embeddings = []
             
             # Initialize sentence transformer
             self.encoder = SentenceTransformer('all-MiniLM-L6-v2')
@@ -725,31 +721,32 @@ class RAGChatbot:
             if not chunks:
                 return False, "No text chunks could be created from the PDF"
 
-            # Clear existing collection and add new chunks
-            try:
-                # Delete existing items
-                existing_ids = self.collection.get()['ids']
-                if existing_ids:
-                    self.collection.delete(ids=existing_ids)
-            except Exception as e:
-                st.warning(f"Could not clear existing collection: {e}")
+            # Clear existing data
+            self.documents = []
+            self.document_embeddings = []
 
-            # Add chunks with progress bar
+            # Create embeddings and add chunks with progress bar
             progress_bar = st.progress(0)
             status_text = st.empty()
             
+            embeddings = []
             for i, chunk in enumerate(chunks):
                 try:
-                    embedding = self.encoder.encode([chunk])[0].tolist()
-                    self.collection.add(
-                        embeddings=[embedding],
-                        documents=[chunk],
-                        ids=[f"chunk_{i}"]
-                    )
+                    embedding = self.encoder.encode([chunk])[0]
+                    embeddings.append(embedding)
+                    self.documents.append(chunk)
                     progress_bar.progress((i + 1) / len(chunks))
                     status_text.text(f"Processing chunk {i + 1} of {len(chunks)}")
                 except Exception as e:
-                    st.error(f"Error adding chunk {i}: {e}")
+                    st.error(f"Error processing chunk {i}: {e}")
+                    
+            # Create Hnswlib index
+            if embeddings:
+                self.document_embeddings = np.array(embeddings)
+                self.index = hnswlib.Index(space='cosine', dim=self.dimension)
+                self.index.init_index(max_elements=len(embeddings), ef_construction=200, M=16)
+                self.index.add_items(self.document_embeddings, list(range(len(embeddings))))
+                self.index.set_ef(50)
                     
             progress_bar.empty()
             status_text.empty()
@@ -764,19 +761,25 @@ class RAGChatbot:
             if not self.openai_client or not self.api_key_valid:
                 return "Error: OpenRouter API key not provided or invalid. Please add a valid API key in the sidebar."
             
-            # Get embeddings for the query
-            query_embedding = self.encoder.encode([query])[0].tolist()
-            
-            # Search for relevant chunks
-            results = self.collection.query(
-                query_embeddings=[query_embedding],
-                n_results=3
-            )
-            
-            if not results['documents'] or not results['documents'][0]:
+            if not self.index or len(self.documents) == 0:
                 return "No relevant information found in the document. Please make sure you've uploaded and processed a document."
             
-            context = "\n".join(results['documents'][0])
+            # Get embeddings for the query
+            query_embedding = self.encoder.encode([query])[0]
+            
+            # Search for relevant chunks
+            labels, distances = self.index.knn_query([query_embedding], k=min(3, len(self.documents)))
+            
+            # Get the most relevant documents
+            relevant_docs = []
+            for label in labels[0]:
+                if label < len(self.documents):
+                    relevant_docs.append(self.documents[label])
+            
+            if not relevant_docs:
+                return "No relevant information found in the document."
+            
+            context = "\n".join(relevant_docs)
 
             # Use OpenRouter API (OpenAI-compatible)
             response = self.openai_client.chat.completions.create(
@@ -1061,7 +1064,7 @@ def main():
             💚 Free models available including Llama 3.1, Phi-3, and Gemma-2
         </p>
         <p style="margin-top: 1rem;">
-            Built with ❤️ using Streamlit, ChromaDB, Sentence Transformers & OpenRouter API
+            Built with ❤️ using Streamlit, Hnswlib, Sentence Transformers & OpenRouter API
         </p>
         <div style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
             <span>🧠 Vector Search</span>
