@@ -247,49 +247,106 @@ st.markdown("""
         to { transform: translateY(0); opacity: 1; }
     }
     
-    /* Enhanced button styling with better visibility */
-    .stButton > button {
-        background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%) !important;
+    /* Enhanced button styling with MAXIMUM visibility for sidebar */
+    .stButton > button,
+    .stSidebar .stButton > button,
+    section[data-testid="stSidebar"] .stButton > button {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
         color: white !important;
-        border: 2px solid var(--accent) !important;
-        border-radius: 12px !important;
-        padding: 0.75rem 1.5rem !important;
-        font-weight: 600 !important;
-        font-size: 1rem !important;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
-        width: 100% !important;
-        height: 3rem !important;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px) !important;
-        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
-        background: linear-gradient(135deg, var(--accent-hover) 0%, #7c3aed 100%) !important;
-    }
-    
-    /* Send button styling */
-    .stForm .stButton > button,
-    .stForm button[kind="formSubmit"],
-    button[kind="formSubmit"],
-    [data-testid="baseButton-secondary"] {
-        background: linear-gradient(135deg, var(--send-button) 0%, #059669 100%) !important;
-        color: white !important;
-        font-size: 1.1rem !important;
-        font-weight: 700 !important;
-        height: 3.5rem !important;
-        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
-        border: 2px solid var(--send-button) !important;
+        border: 3px solid #10b981 !important;
         border-radius: 15px !important;
+        padding: 1rem 1.5rem !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+        width: 100% !important;
+        height: 3.5rem !important;
+        min-height: 3.5rem !important;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+        letter-spacing: 0.5px !important;
+        text-transform: uppercase !important;
+        position: relative !important;
+        z-index: 10 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
-    .stForm .stButton > button:hover,
-    .stForm button[kind="formSubmit"]:hover,
-    button[kind="formSubmit"]:hover,
-    [data-testid="baseButton-secondary"]:hover {
-        background: linear-gradient(135deg, var(--send-button-hover) 0%, #047857 100%) !important;
+    .stButton > button:hover,
+    .stSidebar .stButton > button:hover,
+    section[data-testid="stSidebar"] .stButton > button:hover {
+        transform: translateY(-3px) scale(1.02) !important;
+        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.7) !important;
+        background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+        border-color: #059669 !important;
+    }
+    
+    .stButton > button:active,
+    .stSidebar .stButton > button:active,
+    section[data-testid="stSidebar"] .stButton > button:active {
+        transform: translateY(-1px) scale(1.01) !important;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.6) !important;
+    }
+    
+    /* Special styling for "Process Document" button */
+    .stSidebar .stButton > button:contains("Process Document"),
+    section[data-testid="stSidebar"] .stButton > button:contains("Process Document") {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        border-color: #f59e0b !important;
+        box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5) !important;
+    }
+    
+    /* Special styling for "Clear Chat History" button */
+    .stSidebar .stButton > button:contains("Clear"),
+    section[data-testid="stSidebar"] .stButton > button:contains("Clear") {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+        border-color: #ef4444 !important;
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5) !important;
+    }
+    
+    /* Force all button containers to be visible */
+    .stButton,
+    .stSidebar .stButton,
+    section[data-testid="stSidebar"] .stButton {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin: 0.5rem 0 !important;
+        width: 100% !important;
+    }
+    
+    /* Ensure button wrapper divs are visible */
+    .stButton > div,
+    .stSidebar .stButton > div,
+    section[data-testid="stSidebar"] .stButton > div {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100% !important;
+    }
+    
+    /* Additional button visibility fixes */
+    button[kind="primary"],
+    button[kind="secondary"],
+    .stButton button[kind="primary"],
+    .stButton button[kind="secondary"],
+    .stSidebar button[kind="primary"],
+    .stSidebar button[kind="secondary"] {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: white !important;
+        border: 3px solid #10b981 !important;
+        font-weight: 700 !important;
+        font-size: 1.1rem !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.5px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: inline-flex !important;
+        min-height: 3.5rem !important;
         box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
-        transform: translateY(-2px) !important;
     }
     
     /* Input fields with bright theme */
@@ -736,22 +793,22 @@ def main():
         if uploaded_file is not None:
             st.success(f"📄 **{uploaded_file.name}** ({uploaded_file.size} bytes)")
             
-            if st.button("🚀 Process Document", use_container_width=True):
-                if not api_key or not api_key.strip():
-                    st.error("❌ Please provide an OpenRouter API key first!")
-                elif 'chatbot' not in st.session_state or not st.session_state.chatbot.api_key_valid:
-                    st.error("❌ Please provide a valid OpenRouter API key first!")
+        if st.button("🚀 Process Document", use_container_width=True, type="primary", key="process_btn"):
+            if not api_key or not api_key.strip():
+                st.error("❌ Please provide an OpenRouter API key first!")
+            elif 'chatbot' not in st.session_state or not st.session_state.chatbot.api_key_valid:
+                st.error("❌ Please provide a valid OpenRouter API key first!")
+            else:
+                with st.spinner("🔄 Processing document..."):
+                    success, result = st.session_state.chatbot.load_pdf_from_upload(uploaded_file)
+                    
+                if success:
+                    st.session_state.document_loaded = True
+                    st.session_state.chunk_count = result
+                    st.success(f"✅ Document processed successfully! Created {result} intelligent text chunks")
+                    st.rerun()
                 else:
-                    with st.spinner("🔄 Processing document..."):
-                        success, result = st.session_state.chatbot.load_pdf_from_upload(uploaded_file)
-                        
-                    if success:
-                        st.session_state.document_loaded = True
-                        st.session_state.chunk_count = result
-                        st.success(f"✅ Document processed successfully! Created {result} intelligent text chunks")
-                        st.rerun()
-                    else:
-                        st.error(f"❌ Processing failed: {result}")
+                    st.error(f"❌ Processing failed: {result}")
 
         # Status Section
         st.markdown("""
@@ -811,7 +868,7 @@ def main():
         </div>
         """, unsafe_allow_html=True)
         
-        if st.button("🗑️ Clear Chat History", use_container_width=True):
+        if st.button("🗑️ Clear Chat History", use_container_width=True, type="primary", key="clear_btn"):
             st.session_state.chat_history = []
             st.rerun()
         
@@ -880,7 +937,7 @@ def main():
             
             with col_button:
                 submit_button = st.form_submit_button(
-                    "Send ✨",
+                    "SEND ✨",
                     use_container_width=True,
                     type="primary"
                 )
