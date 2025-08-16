@@ -17,31 +17,39 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Modern CSS with glassmorphism, animations, and dark theme
+# Modern CSS with bright theme and enhanced sidebar visibility
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
     
-    /* Root variables for dark theme */
+    /* Root variables for bright theme */
     :root {
-        --bg-primary: #0f0f23;
-        --bg-secondary: #1a1a2e;
-        --bg-glass: rgba(255, 255, 255, 0.05);
-        --text-primary: #ffffff;
-        --text-secondary: #a0a0a0;
-        --accent: #6366f1;
-        --accent-hover: #5b59f7;
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --bg-tertiary: #f1f5f9;
+        --bg-glass: rgba(255, 255, 255, 0.9);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --accent: #3b82f6;
+        --accent-hover: #2563eb;
         --success: #10b981;
         --error: #ef4444;
         --warning: #f59e0b;
-        --send-button: #22c55e;
-        --send-button-hover: #16a34a;
+        --send-button: #10b981;
+        --send-button-hover: #059669;
+        --border-color: #e2e8f0;
+        --shadow: rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Force Streamlit to use our theme */
+    .stApp {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%) !important;
     }
     
     /* Global styles */
     .main, .block-container {
         font-family: 'Inter', sans-serif !important;
-        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important;
+        background: var(--bg-primary) !important;
         color: var(--text-primary) !important;
         padding-top: 1rem !important;
     }
@@ -51,111 +59,113 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
+    /* Force sidebar visibility and styling */
+    .css-1d391kg, 
+    .stSidebar .css-1d391kg,
+    .stSidebar,
+    section[data-testid="stSidebar"],
+    .css-1cypcdb,
+    .css-17eq0hr {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+        border-right: 2px solid var(--border-color) !important;
+        box-shadow: 2px 0 10px var(--shadow) !important;
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+        width: 300px !important;
+        min-width: 300px !important;
+    }
+    
+    /* Sidebar content visibility */
+    .stSidebar > div,
+    section[data-testid="stSidebar"] > div {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+        padding: 1rem !important;
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+    }
+    
+    /* Sidebar elements */
+    .stSidebar .stMarkdown,
+    .stSidebar .stTextInput,
+    .stSidebar .stFileUploader,
+    .stSidebar .stSelectbox,
+    .stSidebar .stButton,
+    section[data-testid="stSidebar"] .stMarkdown,
+    section[data-testid="stSidebar"] .stTextInput,
+    section[data-testid="stSidebar"] .stFileUploader,
+    section[data-testid="stSidebar"] .stSelectbox,
+    section[data-testid="stSidebar"] .stButton {
+        color: var(--text-primary) !important;
+        visibility: visible !important;
+        display: block !important;
+        opacity: 1 !important;
+    }
+    
     /* Hero section */
     .hero-section {
         text-align: center;
-        padding: 3rem 0;
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
         border-radius: 20px;
         margin-bottom: 2rem;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.2) 0%, transparent 50%);
-        animation: pulse 4s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-        0%, 100% { opacity: 0.5; }
-        50% { opacity: 1; }
+        border: 2px solid rgba(59, 130, 246, 0.2);
+        box-shadow: 0 10px 30px var(--shadow);
     }
     
     .hero-title {
         font-size: 3.5rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+        background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         margin-bottom: 1rem;
-        position: relative;
-        z-index: 1;
     }
     
     .hero-subtitle {
         font-size: 1.2rem;
         color: var(--text-secondary);
-        position: relative;
-        z-index: 1;
     }
     
-    /* Sidebar styling */
-    .css-1d391kg, .stSidebar .css-1d391kg {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-    
-    .stSidebar {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-    
-    .stSidebar > div {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%) !important;
-    }
-    
-    .stSidebar .stMarkdown {
-        color: var(--text-primary) !important;
-    }
-    
+    /* Sidebar section styling */
     .sidebar-section {
-        background: rgba(255, 255, 255, 0.08) !important;
-        backdrop-filter: blur(15px) !important;
-        border: 2px solid rgba(255, 255, 255, 0.15) !important;
+        background: rgba(59, 130, 246, 0.05) !important;
+        border: 2px solid rgba(59, 130, 246, 0.2) !important;
         border-radius: 15px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 15px var(--shadow);
     }
     
     .sidebar-section:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
-        border-color: rgba(99, 102, 241, 0.3) !important;
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        border-color: var(--accent) !important;
     }
     
     .sidebar-title {
         font-size: 1.1rem;
         font-weight: 600;
-        color: white !important;
+        color: var(--text-primary) !important;
         margin-bottom: 1rem;
         display: flex;
         align-items: center;
         gap: 0.5rem;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
     
     /* Chat container */
     .chat-container {
         background: var(--bg-glass);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 2px solid var(--border-color);
         border-radius: 20px;
         padding: 2rem;
         margin: 1rem 0;
         max-height: 600px;
         overflow-y: auto;
-        position: relative;
+        box-shadow: 0 10px 30px var(--shadow);
     }
     
     .chat-container::-webkit-scrollbar {
@@ -163,37 +173,35 @@ st.markdown("""
     }
     
     .chat-container::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--bg-tertiary);
         border-radius: 10px;
     }
     
     .chat-container::-webkit-scrollbar-thumb {
-        background: linear-gradient(135deg, #6366f1, #a855f7);
+        background: linear-gradient(135deg, var(--accent), #8b5cf6);
         border-radius: 10px;
     }
     
     /* Message bubbles */
     .user-message {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 25px 25px 8px 25px;
         margin: 1rem 0;
         margin-left: 15%;
-        position: relative;
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
         animation: slideInRight 0.3s ease-out;
     }
     
     .bot-message {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
         color: white;
         padding: 1rem 1.5rem;
         border-radius: 25px 25px 25px 8px;
         margin: 1rem 0;
         margin-right: 15%;
-        position: relative;
-        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         animation: slideInLeft 0.3s ease-out;
     }
     
@@ -213,7 +221,6 @@ st.markdown("""
         border-radius: 15px;
         margin: 1rem 0;
         border-left: 4px solid;
-        backdrop-filter: blur(10px);
         animation: fadeInUp 0.5s ease-out;
     }
     
@@ -240,188 +247,145 @@ st.markdown("""
         to { transform: translateY(0); opacity: 1; }
     }
     
-    /* Custom buttons - General styling */
+    /* Enhanced button styling with better visibility */
     .stButton > button {
-        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
+        background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%) !important;
         color: white !important;
-        border: none !important;
+        border: 2px solid var(--accent) !important;
         border-radius: 12px !important;
         padding: 0.75rem 1.5rem !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         font-size: 1rem !important;
         transition: all 0.3s ease !important;
-        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4) !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
         width: 100% !important;
         height: 3rem !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        opacity: 1 !important;
-        visibility: visible !important;
     }
     
     .stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6) !important;
-        background: linear-gradient(135deg, #5b59f7 0%, #7c3aed 100%) !important;
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4) !important;
+        background: linear-gradient(135deg, var(--accent-hover) 0%, #7c3aed 100%) !important;
     }
     
-    .stButton > button:active {
-        transform: translateY(0) !important;
-    }
-    
-    /* ENHANCED SEND BUTTON STYLING - MAXIMUM VISIBILITY */
+    /* Send button styling */
     .stForm .stButton > button,
     .stForm button[kind="formSubmit"],
     button[kind="formSubmit"],
-    [data-testid="baseButton-secondary"],
-    .stForm [data-testid="baseButton-secondary"] {
-        background: linear-gradient(135deg, var(--send-button) 0%, #16a34a 100%) !important;
+    [data-testid="baseButton-secondary"] {
+        background: linear-gradient(135deg, var(--send-button) 0%, #059669 100%) !important;
         color: white !important;
         font-size: 1.1rem !important;
         font-weight: 700 !important;
         height: 3.5rem !important;
-        min-height: 3.5rem !important;
-        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5) !important;
-        border: 2px solid rgba(34, 197, 94, 0.8) !important;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+        border: 2px solid var(--send-button) !important;
         border-radius: 15px !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
-        backdrop-filter: blur(10px) !important;
-        position: relative !important;
-        z-index: 10 !important;
-        transition: all 0.2s ease !important;
     }
     
     .stForm .stButton > button:hover,
     .stForm button[kind="formSubmit"]:hover,
     button[kind="formSubmit"]:hover,
-    [data-testid="baseButton-secondary"]:hover,
-    .stForm [data-testid="baseButton-secondary"]:hover {
-        background: linear-gradient(135deg, var(--send-button-hover) 0%, #15803d 100%) !important;
-        box-shadow: 0 8px 30px rgba(34, 197, 94, 0.7) !important;
-        transform: translateY(-3px) scale(1.02) !important;
-        border-color: rgba(34, 197, 94, 1) !important;
+    [data-testid="baseButton-secondary"]:hover {
+        background: linear-gradient(135deg, var(--send-button-hover) 0%, #047857 100%) !important;
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5) !important;
+        transform: translateY(-2px) !important;
     }
     
-    .stForm .stButton > button:active,
-    .stForm button[kind="formSubmit"]:active,
-    button[kind="formSubmit"]:active,
-    [data-testid="baseButton-secondary"]:active,
-    .stForm [data-testid="baseButton-secondary"]:active {
-        transform: translateY(-1px) scale(1.01) !important;
-        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.6) !important;
-    }
-    
-    /* Ensure send button container is visible */
-    .stForm > div > div {
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    
-    /* Input fields - ENHANCED VERSION FOR MAXIMUM VISIBILITY */
+    /* Input fields with bright theme */
     .stTextInput > div > div > input, 
     .stTextInput input,
     [data-testid="stTextInput"] > div > div > input,
-    [data-testid="stTextInput"] input,
-    .stTextInput > label + div > div > input,
-    div[data-testid="stTextInput"] input {
-        background: rgba(255, 255, 255, 0.85) !important;
-        border: 2px solid rgba(255, 255, 255, 0.9) !important;
-        border-radius: 15px !important;
-        color: #1a1a2e !important;
-        backdrop-filter: blur(10px) !important;
+    [data-testid="stTextInput"] input {
+        background: white !important;
+        border: 2px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        color: var(--text-primary) !important;
         padding: 1rem 1.5rem !important;
-        font-size: 1.1rem !important;
+        font-size: 1rem !important;
         height: 3.5rem !important;
-        box-sizing: border-box !important;
-        width: 100% !important;
-        min-height: 3.5rem !important;
-        font-weight: 500 !important;
-        line-height: 1.5 !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+        box-shadow: 0 2px 10px var(--shadow) !important;
         transition: all 0.3s ease !important;
     }
     
     .stTextInput > div > div > input:focus,
     .stTextInput input:focus,
     [data-testid="stTextInput"] > div > div > input:focus,
-    [data-testid="stTextInput"] input:focus,
-    .stTextInput > label + div > div > input:focus,
-    div[data-testid="stTextInput"] input:focus {
+    [data-testid="stTextInput"] input:focus {
         border-color: var(--accent) !important;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3), 0 4px 20px rgba(99, 102, 241, 0.2) !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 4px 15px var(--shadow) !important;
         outline: none !important;
-        background: rgba(255, 255, 255, 0.95) !important;
-        transform: translateY(-1px) !important;
     }
     
     .stTextInput > div > div > input::placeholder,
     .stTextInput input::placeholder,
     [data-testid="stTextInput"] > div > div > input::placeholder,
-    [data-testid="stTextInput"] input::placeholder,
-    .stTextInput > label + div > div > input::placeholder,
-    div[data-testid="stTextInput"] input::placeholder {
-        color: rgba(26, 26, 46, 0.6) !important;
-        font-weight: 400 !important;
+    [data-testid="stTextInput"] input::placeholder {
+        color: var(--text-secondary) !important;
     }
     
-    /* Text input container styling */
-    .stTextInput > div,
-    [data-testid="stTextInput"] > div,
-    .stTextInput > label + div {
-        width: 100% !important;
-        position: relative !important;
+    /* Sidebar input fields */
+    .stSidebar .stTextInput > div > div > input,
+    section[data-testid="stSidebar"] .stTextInput > div > div > input {
+        background: white !important;
+        border: 2px solid var(--border-color) !important;
+        color: var(--text-primary) !important;
+        font-weight: 500 !important;
     }
     
-    .stTextInput > div > div,
-    [data-testid="stTextInput"] > div > div,
-    .stTextInput > label + div > div {
-        width: 100% !important;
-        position: relative !important;
+    .stSidebar .stTextInput > div > div > input:focus,
+    section[data-testid="stSidebar"] .stTextInput > div > div > input:focus {
+        border-color: var(--accent) !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
     }
     
-    /* Form container styling to ensure proper alignment */
-    .stForm {
-        width: 100% !important;
-        background: rgba(255, 255, 255, 0.08) !important;
-        backdrop-filter: blur(15px) !important;
-        border: 2px solid rgba(255, 255, 255, 0.15) !important;
+    /* Select boxes */
+    .stSelectbox > div > div > select {
+        background: white !important;
+        border: 2px solid var(--border-color) !important;
+        border-radius: 12px !important;
+        color: var(--text-primary) !important;
+        padding: 0.75rem !important;
+        font-size: 1rem !important;
+    }
+    
+    .stSelectbox > div > div > select:focus {
+        border-color: var(--accent) !important;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2) !important;
+    }
+    
+    /* File uploader */
+    .stFileUploader {
+        border: 2px dashed rgba(59, 130, 246, 0.5) !important;
+        border-radius: 15px !important;
+        background: rgba(59, 130, 246, 0.05) !important;
+        padding: 2rem !important;
+        text-align: center !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stFileUploader:hover {
+        border-color: var(--accent) !important;
+        background: rgba(59, 130, 246, 0.1) !important;
+    }
+    
+    .stFileUploader > div {
+        color: var(--text-primary) !important;
+    }
+    
+    .stFileUploader label {
+        color: var(--text-primary) !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Form container */
+    .stForm, .chat-input-container {
+        background: rgba(255, 255, 255, 0.8) !important;
+        border: 2px solid var(--border-color) !important;
         border-radius: 20px;
         padding: 2rem;
         margin: 1rem 0;
-    }
-    
-    /* Column styling for input form - Ensure button column is visible */
-    [data-testid="column"] {
-        width: 100% !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    
-    /* Specific styling for the button column */
-    [data-testid="column"]:last-child {
-        display: flex !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
-        min-height: 3.5rem !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    
-    /* Input container in form */
-    .chat-input-container {
-        background: rgba(255, 255, 255, 0.08) !important;
-        backdrop-filter: blur(15px) !important;
-        border: 2px solid rgba(255, 255, 255, 0.15) !important;
-        border-radius: 20px;
-        padding: 2rem;
-        margin: 1rem 0;
-        width: 100% !important;
+        box-shadow: 0 4px 15px var(--shadow);
     }
     
     /* Input section title */
@@ -431,100 +395,27 @@ st.markdown("""
         text-align: center;
         font-size: 1.3rem;
         font-weight: 600;
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+        background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 50%, #ec4899 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
     
-    .stSelectbox > div > div > select {
-        background: var(--bg-glass) !important;
-        border: 2px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 12px !important;
-        color: var(--text-primary) !important;
-        padding: 0.75rem !important;
-        font-size: 1rem !important;
-    }
-    
-    .stSelectbox > div > div > select:focus {
-        border-color: var(--accent) !important;
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3) !important;
-    }
-    
-    /* Sidebar text inputs */
-    .stSidebar .stTextInput > div > div > input {
-        background: rgba(255, 255, 255, 0.12) !important;
-        border: 2px solid rgba(255, 255, 255, 0.35) !important;
-        color: white !important;
-        font-weight: 500 !important;
-    }
-    
-    .stSidebar .stSelectbox > div > div > select {
-        background: rgba(255, 255, 255, 0.12) !important;
-        border: 2px solid rgba(255, 255, 255, 0.35) !important;
-        color: white !important;
-        font-weight: 500 !important;
-    }
-    
-    /* File uploader */
-    .stFileUploader {
-        border: 2px dashed rgba(99, 102, 241, 0.5) !important;
-        border-radius: 15px !important;
-        background: rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(10px) !important;
-        padding: 2rem !important;
-        text-align: center !important;
-        transition: all 0.3s ease !important;
-    }
-    
-    .stFileUploader:hover {
-        border-color: var(--accent) !important;
-        background: rgba(99, 102, 241, 0.1) !important;
-    }
-    
-    .stFileUploader > div {
-        color: var(--text-primary) !important;
-    }
-    
-    .stFileUploader label {
-        color: white !important;
-    }
-    
-    /* File uploader drag and drop area */
-    .stFileUploader > div > div {
-        background: transparent !important;
-        border: none !important;
-    }
-    
     /* Progress bars */
     .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%) !important;
-    }
-    
-    /* Floating elements */
-    .floating-element {
-        position: fixed;
-        pointer-events: none;
-        opacity: 0.1;
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        33% { transform: translateY(-20px) rotate(5deg); }
-        66% { transform: translateY(-10px) rotate(-5deg); }
+        background: linear-gradient(90deg, var(--accent) 0%, #8b5cf6 50%, #a855f7 100%) !important;
     }
     
     /* Footer */
     .footer {
         text-align: center;
         padding: 2rem;
-        background: var(--bg-glass);
-        backdrop-filter: blur(10px);
+        background: white;
         border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 2px solid var(--border-color);
         margin-top: 3rem;
         color: var(--text-secondary);
+        box-shadow: 0 4px 15px var(--shadow);
     }
     
     .footer a {
@@ -537,43 +428,6 @@ st.markdown("""
         color: var(--accent-hover);
     }
     
-    /* Mobile responsiveness */
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.5rem;
-        }
-        
-        .user-message, .bot-message {
-            margin-left: 5% !important;
-            margin-right: 5% !important;
-        }
-        
-        .chat-container {
-            padding: 1rem;
-        }
-        
-        .chat-input-container, .stForm {
-            padding: 1rem !important;
-        }
-        
-        .stTextInput > div > div > input, 
-        .stTextInput input,
-        [data-testid="stTextInput"] > div > div > input,
-        [data-testid="stTextInput"] input {
-            font-size: 1rem !important;
-            height: 3rem !important;
-            padding: 0.75rem 1rem !important;
-        }
-        
-        .stForm .stButton > button,
-        .stForm button[kind="formSubmit"],
-        button[kind="formSubmit"],
-        [data-testid="baseButton-secondary"] {
-            height: 3rem !important;
-            font-size: 1rem !important;
-        }
-    }
-    
     /* Typing indicator */
     .typing-indicator {
         display: flex;
@@ -582,6 +436,9 @@ st.markdown("""
         padding: 1rem;
         margin: 1rem 0;
         color: var(--text-secondary);
+        background: rgba(59, 130, 246, 0.05);
+        border-radius: 15px;
+        border: 1px solid rgba(59, 130, 246, 0.2);
     }
     
     .typing-dots {
@@ -616,33 +473,34 @@ st.markdown("""
         }
     }
     
-    /* Enhanced focus ring for accessibility */
-    .stTextInput > div > div > input:focus-visible,
-    .stTextInput input:focus-visible,
-    [data-testid="stTextInput"] > div > div > input:focus-visible,
-    [data-testid="stTextInput"] input:focus-visible {
-        outline: 2px solid var(--accent) !important;
-        outline-offset: 2px !important;
-    }
-
-    /* Additional button visibility fixes */
-    .stForm button {
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: inline-flex !important;
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .user-message, .bot-message {
+            margin-left: 5% !important;
+            margin-right: 5% !important;
+        }
+        
+        .chat-container {
+            padding: 1rem;
+        }
+        
+        .sidebar-section {
+            padding: 1rem;
+        }
     }
     
-    /* Force visibility on all form buttons */
-    button[type="submit"],
-    button[kind="formSubmit"] {
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: inline-flex !important;
-        background: linear-gradient(135deg, var(--send-button) 0%, #16a34a 100%) !important;
-        color: white !important;
-        font-weight: 700 !important;
-        border: 2px solid rgba(34, 197, 94, 0.8) !important;
-        box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5) !important;
+    /* Force sidebar visibility on mobile */
+    @media (max-width: 768px) {
+        .stSidebar,
+        section[data-testid="stSidebar"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -828,21 +686,23 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-    # Sidebar
+    # Sidebar with enhanced visibility
     with st.sidebar:
+        st.markdown("# 🚀 RAG Chatbot Control Panel")
+        
         # API Configuration Section
         st.markdown("""
         <div class="sidebar-section">
             <div class="sidebar-title">🔑 API Configuration</div>
+        </div>
         """, unsafe_allow_html=True)
         
         api_key = st.text_input(
-            "",
+            "OpenRouter API Key",
             type="password",
             help="Enter your OpenRouter API key. Get one from https://openrouter.ai/keys",
             placeholder="sk-or-v1-...",
-            value=st.session_state.get('current_api_key', ''),
-            label_visibility="collapsed"
+            value=st.session_state.get('current_api_key', '')
         )
         
         # Initialize or reinitialize chatbot when API key changes
@@ -860,29 +720,27 @@ def main():
                 if 'chatbot' in st.session_state:
                     del st.session_state.chatbot
         
-        st.markdown("</div>", unsafe_allow_html=True)
-        
         # Document Upload Section
         st.markdown("""
         <div class="sidebar-section">
             <div class="sidebar-title">📁 Document Upload</div>
+        </div>
         """, unsafe_allow_html=True)
         
         uploaded_file = st.file_uploader(
-            "",
+            "Choose a PDF file",
             type="pdf",
-            help="Upload a PDF document to chat with its content",
-            label_visibility="collapsed"
+            help="Upload a PDF document to chat with its content"
         )
         
         if uploaded_file is not None:
-            st.markdown(f"📄 **{uploaded_file.name}** ({uploaded_file.size} bytes)")
+            st.success(f"📄 **{uploaded_file.name}** ({uploaded_file.size} bytes)")
             
             if st.button("🚀 Process Document", use_container_width=True):
                 if not api_key or not api_key.strip():
-                    st.markdown('<div class="status-card status-error">❌ Please provide an OpenRouter API key first!</div>', unsafe_allow_html=True)
+                    st.error("❌ Please provide an OpenRouter API key first!")
                 elif 'chatbot' not in st.session_state or not st.session_state.chatbot.api_key_valid:
-                    st.markdown('<div class="status-card status-error">❌ Please provide a valid OpenRouter API key first!</div>', unsafe_allow_html=True)
+                    st.error("❌ Please provide a valid OpenRouter API key first!")
                 else:
                     with st.spinner("🔄 Processing document..."):
                         success, result = st.session_state.chatbot.load_pdf_from_upload(uploaded_file)
@@ -890,47 +748,36 @@ def main():
                     if success:
                         st.session_state.document_loaded = True
                         st.session_state.chunk_count = result
-                        st.markdown(f"""
-                        <div class="status-card status-success">
-                            ✅ Document processed successfully!<br>
-                            📊 Created {result} intelligent text chunks
-                        </div>
-                        """, unsafe_allow_html=True)
+                        st.success(f"✅ Document processed successfully! Created {result} intelligent text chunks")
                         st.rerun()
                     else:
-                        st.markdown(f"""
-                        <div class="status-card status-error">
-                            ❌ Processing failed: {result}
-                        </div>
-                        """, unsafe_allow_html=True)
-        
-        st.markdown("</div>", unsafe_allow_html=True)
+                        st.error(f"❌ Processing failed: {result}")
 
         # Status Section
         st.markdown("""
         <div class="sidebar-section">
             <div class="sidebar-title">📊 System Status</div>
+        </div>
         """, unsafe_allow_html=True)
         
         if not api_key or not api_key.strip():
-            st.markdown('<div class="status-card status-error">🔑 API key required</div>', unsafe_allow_html=True)
+            st.warning("🔑 API key required")
         elif 'chatbot' not in st.session_state or not st.session_state.chatbot.api_key_valid:
-            st.markdown('<div class="status-card status-error">🔑 Invalid API key</div>', unsafe_allow_html=True)
+            st.error("🔑 Invalid API key")
         elif st.session_state.document_loaded:
-            st.markdown(f'<div class="status-card status-success">✅ Ready to chat ({st.session_state.chunk_count} chunks loaded)</div>', unsafe_allow_html=True)
+            st.success(f"✅ Ready to chat ({st.session_state.chunk_count} chunks loaded)")
         else:
-            st.markdown('<div class="status-card status-warning">⚠️ No document loaded</div>', unsafe_allow_html=True)
-        
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.info("⚠️ No document loaded")
         
         # Model Settings Section
         st.markdown("""
         <div class="sidebar-section">
             <div class="sidebar-title">🤖 AI Model Settings</div>
+        </div>
         """, unsafe_allow_html=True)
         
         model_option = st.selectbox(
-            "",
+            "Select AI Model",
             [
                 "meta-llama/llama-3.1-8b-instruct:free",
                 "meta-llama/llama-3.1-70b-instruct:free",
@@ -944,8 +791,7 @@ def main():
                 "google/gemini-pro-1.5",
                 "meta-llama/llama-3.1-405b-instruct"
             ],
-            help="Free models available! Paid models offer better performance.",
-            label_visibility="collapsed"
+            help="Free models available! Paid models offer better performance."
         )
         
         # Update model in chatbot
@@ -954,26 +800,40 @@ def main():
         
         # Show model info
         if "free" in model_option:
-            st.markdown("💚 **Free Model** - No credits required")
+            st.success("💚 **Free Model** - No credits required")
         else:
-            st.markdown("💎 **Premium Model** - Requires OpenRouter credits")
-        
-        st.markdown("</div>", unsafe_allow_html=True)
+            st.info("💎 **Premium Model** - Requires OpenRouter credits")
         
         # Actions Section
         st.markdown("""
         <div class="sidebar-section">
             <div class="sidebar-title">🎛️ Actions</div>
+        </div>
         """, unsafe_allow_html=True)
         
         if st.button("🗑️ Clear Chat History", use_container_width=True):
             st.session_state.chat_history = []
             st.rerun()
         
-        st.markdown("</div>", unsafe_allow_html=True)
+        # Help Section
+        st.markdown("""
+        <div class="sidebar-section">
+            <div class="sidebar-title">❓ Quick Help</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        **Getting Started:**
+        1. 🔑 Enter your OpenRouter API key
+        2. 📁 Upload a PDF document
+        3. 🚀 Click "Process Document"
+        4. 💬 Start chatting with your document!
+        
+        **Get API Key:** [openrouter.ai/keys](https://openrouter.ai/keys)
+        """)
 
     # Main Content Area
-    col1, col2, col3 = st.columns([1, 4, 1])
+    col1, col2, col3 = st.columns([1, 6, 1])
     
     with col2:
         # Chat Interface
@@ -1004,23 +864,21 @@ def main():
         
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # Input Section with enhanced visibility and improved layout
+        # Input Section
         st.markdown('<h3 class="input-section-title">💭 Ask your question</h3>', unsafe_allow_html=True)
         
         with st.form("chat_form", clear_on_submit=True):
-            # Use a better column ratio for better button visibility
-            col_input, col_button = st.columns([3.5, 1])
+            col_input, col_button = st.columns([4, 1])
             
             with col_input:
                 user_question = st.text_input(
-                    "",
+                    "Your question",
                     placeholder="What insights can you share about this document?",
                     label_visibility="collapsed",
                     key="user_input"
                 )
             
             with col_button:
-                # Use a more explicit button with better styling
                 submit_button = st.form_submit_button(
                     "Send ✨",
                     use_container_width=True,
@@ -1073,14 +931,6 @@ def main():
             <span>🎨 Modern UI/UX</span>
         </div>
     </div>
-    """, unsafe_allow_html=True)
-
-    # Floating background elements
-    st.markdown("""
-    <div class="floating-element" style="top: 10%; left: 10%; font-size: 2rem;">🤖</div>
-    <div class="floating-element" style="top: 20%; right: 15%; font-size: 1.5rem;">✨</div>
-    <div class="floating-element" style="bottom: 30%; left: 5%; font-size: 1.8rem;">📚</div>
-    <div class="floating-element" style="bottom: 10%; right: 10%; font-size: 1.2rem;">🔮</div>
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
